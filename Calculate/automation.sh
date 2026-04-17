@@ -26,7 +26,7 @@ echo " Files saved as: ${TEST_NAME}_*.csv"
 echo "============================================="
 
 echo ">>> [OPTIONAL] CPU OVERHEAD TEST"
-echo "On both worker nodes, run: bash node_cpu_monitor.sh 30"
+echo "On both worker nodes, run: bash worker_only_cpuOverhead.sh 30"
 read -p "Press ENTER when workers are ready..."
 kubectl exec iperf-client -- iperf3 -c $SERVER_IP -t 30
 echo "Done! Record CPU percentages from worker screens."

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Put this file on worker nodes ONLY.
-# Run it with: bash node_cpu_monitor.sh 30
+# Run it with: bash worker_only_cpuOverhead.sh 30
 
 DURATION=${1:-30}
 echo ">>> Monitoring CPU for $DURATION seconds..."
