@@ -12,7 +12,7 @@ echo " Configuration Profile: $TEST_NAME"
 echo "============================================="
 
 # Ensure all scripts are executable
-chmod +x 00_deploy.sh 01_throughput.sh 02_latency_sizes.sh 03_microservices.sh
+chmod +x deploy_pods.sh throughput.sh latency.sh microservices.sh
 
 bash ./deploy_pods.sh
 bash ./throughput.sh
