@@ -1,8 +1,12 @@
 #!/bin/bash
-# Run on Prakhar-PC.
+set -euo pipefail
+
+# Run on control node
 echo ">>> [1/2] Installing Tigera Operator..."
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
-sleep 10
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
+
+echo ">>> Waiting for Tigera Operator to be ready..."
+kubectl -n tigera-operator rollout status deploy/tigera-operator --timeout=180s
 
 echo ">>> [2/2] Injecting Custom Resources (Forced to 10.244.0.0/16)..."
 cat <<EOF | kubectl apply -f -
