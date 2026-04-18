@@ -1,0 +1,99 @@
+CNI Benchmark Interpretation Note (Open-Ended Research Framing)
+Date: 2026-04-18
+Project: GRS CNI Plugin Comparison
+
+1) Problem Statement
+--------------------
+Our initial expectation was that CNI performance ordering would match common
+"theoretical" claims from clean-lab and wired-network benchmarks. However, in
+our real deployment environment (university Wi-Fi + mixed lab nodes), observed
+results deviated from those expectations.
+
+This is not a project failure. It is a valid systems finding.
+
+2) Why Results Deviated From Theory
+-----------------------------------
+Theoretical comparisons often assume stable, low-loss, low-jitter, wired links.
+Our setup did not satisfy those assumptions. Likely dominant factors:
+
+- Wi-Fi airtime contention and variable interference.
+- Burst packet loss and jitter at higher offered load.
+- Queueing/retransmission effects dominating endpoint behavior.
+- Overlay and MTU overhead interacting with unstable links.
+- Shared host variability (CPU scheduling/background load differences).
+- Run-to-run non-determinism caused by real network noise.
+
+In short: environment-level bottlenecks frequently dominated CNI datapath
+micro-optimizations.
+
+3) What We Actually Achieved
+----------------------------
+We built and executed an end-to-end reproducible benchmark pipeline across
+multiple CNI modes and metrics:
+
+- TCP throughput (iperf3)
+- Request/response rate by payload size (netperf TCP_RR)
+- Latency distribution (Fortio P50/P99/Max)
+- UDP throughput/loss/jitter
+- Node/pod CPU overhead during load
+
+We also identified data-quality artifacts and corrected schema issues where
+needed (e.g., malformed latency CSV format), improving validity of analysis.
+
+4) Defensible Research Position
+-------------------------------
+The project should be presented as:
+
+"An environment-conditioned empirical CNI study showing that plugin ranking can
+invert under real campus-network conditions."
+
+Key message:
+- There is no universal best CNI.
+- "Best" depends on deployment environment, traffic profile, and SLO priority
+  (throughput vs tail latency vs UDP stability vs overhead).
+
+5) How To Present It (Recommended Storyline)
+--------------------------------------------
+Slide flow:
+
+1. Motivation
+   - Industry guidance is usually lab-centric.
+   - We tested in real campus constraints.
+
+2. Method
+   - Same cluster family, multiple CNIs/modes, repeated runs, same metric suite.
+
+3. Results
+   - Show metric-wise rankings (not a single global winner).
+   - Highlight instability/outliers where they occurred.
+
+4. Diagnosis
+   - Explain mismatch between theoretical assumptions and observed environment.
+
+5. Research Contribution
+   - A practical decision framework for CNI selection under non-ideal networks.
+
+6. Future Work
+   - Controlled wired-vs-Wi-Fi A/B tests.
+   - More runs/time windows and confidence intervals.
+   - Full metric parity for all CNI modes.
+
+6) Suggested Verbatim Lines For Viva/Presentation
+--------------------------------------------------
+- "Our findings are context-valid rather than universally prescriptive."
+- "We measured real deployment behavior, not only idealized datapath capacity."
+- "The result inversion is the core insight: environment can outweigh theory."
+- "Therefore, CNI selection should be benchmarked in the target environment."
+
+7) If Asked: 'Why Not Matching Papers?'
+---------------------------------------
+Short answer:
+"Most papers benchmark under controlled wired testbeds. We benchmarked under
+campus Wi-Fi and shared lab infrastructure, where loss, jitter, and contention
+change transport behavior and can invert expected CNI ordering."
+
+8) Final Conclusion
+-------------------
+This open-ended project successfully evolved into applied networking research.
+The main contribution is a reproducible, evidence-backed demonstration that
+real-world conditions can materially alter CNI performance rankings.
